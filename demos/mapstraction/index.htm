@@ -1,0 +1,50 @@
+<html>
+	<head>
+		<script type="text/javascript" src="mapstraction.core.js"></script>
+		<script type="text/javascript" src="mapstraction.google.js"></script>
+		<script type="text/javascript" src="mapstraction.yahoo.js"></script>
+		<script type="text/javascript">
+		
+		alert('Create google Mapstraction object');
+		var map1 = new mxn.Mapstraction('google');
+		
+		alert('Calling addMarker');
+		map1.addMarker();
+		
+		alert('Calling addPolyline');
+		map1.addPolyline();
+		
+		alert('Create yahoo Mapstraction object');
+		var map2 = new mxn.Mapstraction('yahoo');
+		
+		alert('Calling addMarker');
+		map2.addMarker();
+		
+		alert('Calling addPolyline');
+		try {
+			map2.addPolyline();
+		}
+		catch(e){
+			alert('Error: ' + e);
+		}
+		
+		alert('Create yahoo Mapstraction object specifying compatibility level 1');
+		try {
+			var map3 = new mxn.Mapstraction('yahoo', 1);
+		}
+		catch(e){
+			alert('Error: ' + e);
+		}
+		
+		</script>
+	</head>
+	<body>
+		<ul>
+			<li><a href="mapstraction.core.js">mapstraction.core.js</a></li>
+			<li><a href="mapstraction.google.js">mapstraction.google.js</a></li>
+			<li><a href="mapstraction.yahoo.js">mapstraction.yahoo.js</a></li>
+		</ul>
+		
+		
+	</body>
+</html>

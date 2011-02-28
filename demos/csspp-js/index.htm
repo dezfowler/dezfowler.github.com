@@ -1,0 +1,44 @@
+<html>
+	<head>
+		<script type="text/javascript" src="domReady.js"></script>
+		<script type="text/javascript">
+			var cssVars = {
+				derek: '#FCC',
+				other: '#CCF'
+			}
+		</script>
+		<script type="text/csspp">
+			.red {
+				
+				border: 2px solid red;
+				
+				h2 {
+					background: #933;
+				}
+				
+				p {
+					background: $derek$;
+				}
+			}
+			
+			.blue {
+
+				border: 2px solid blue;
+			    background: $other$;
+								
+			}
+		</script>
+		<script type="text/javascript" src="csspp.js"></script>
+	</head>
+	<body>
+		<h1>Hello World</h1>
+		<div class="red">
+			<h2>Red div title</h2>
+			<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Nullam massa ligula, accumsan eu, dictum eu, luctus lobortis, diam. Quisque et quam. Nulla eget nisi sit amet ante tempus lobortis. Cras quis ante eget tortor cursus faucibus. Donec a tortor non est auctor auctor. Phasellus ac leo. Integer hendrerit ultrices orci. Sed tempus, mi venenatis volutpat cursus, dui turpis pulvinar nisi, eget fringilla odio nulla vel mauris. Vestibulum nisi massa, feugiat nec, dictum sit amet, blandit vel, nibh. Nunc viverra ligula. Aliquam placerat. Sed aliquet lectus at justo. Duis lobortis pellentesque est. Suspendisse feugiat sem eu nisl. Vestibulum volutpat diam eget pede. Vestibulum quis elit quis lorem mattis viverra. Morbi sodales urna.</p>
+		</div>
+		<div class="blue">
+			<h2>Blue div title</h2>
+			<p>Nunc lobortis est id pede consequat porta. Morbi euismod venenatis magna. Aliquam gravida gravida felis. Mauris a mauris vitae tellus pharetra vulputate. Pellentesque sed eros. Ut faucibus est sed enim rhoncus vehicula. Maecenas enim nisi, condimentum quis, volutpat eget, gravida et, eros. Nulla ut nibh et justo vestibulum interdum. Ut molestie libero in pede. Pellentesque laoreet felis at neque. Nunc non mi sed lacus placerat dictum. Suspendisse vitae dolor eget erat malesuada tincidunt. Phasellus risus. Nunc varius orci eget ipsum. Sed facilisis nibh et risus. Etiam suscipit consequat nibh. Mauris nec sapien. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Quisque sollicitudin vehicula dolor. Quisque molestie arcu vel libero.</p>
+		</div>
+	</body>
+</html>

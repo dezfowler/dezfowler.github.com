@@ -1,0 +1,143 @@
+using System;
+using System.Data.SqlClient;
+
+public class MyClass
+{
+	public static void Main()
+	{
+		const string SQL_CONN_STR = @"Data Source=.\SQLEXPRESS;Initial Catalog=master;Integrated Security=SSPI;";
+		string[] cmds = new string[]{
+
+@"
+PRINT 'Start.'
+PRINT 'End.'",
+
+@"
+PRINT 'Start.'
+RAISERROR (N'Error.', 10, 1)
+PRINT 'End.'",
+
+@"
+PRINT 'Start.'
+RAISERROR (N'Error.', 16, 1)
+PRINT 'End.'",
+
+@"
+PRINT 'Start.'
+RAISERROR (N'Error.', 18, 1)
+PRINT 'End.'",
+
+@"
+PRINT 'Start.'
+RAISERROR (N'Error.', 20, 1) WITH LOG
+PRINT 'End.'",
+
+@"
+PRINT 'Start.'
+
+BEGIN TRY
+      PRINT 'Try.'     
+      RAISERROR (N'Error in TRY.', 16, 1)
+      PRINT 'Try.'     
+END TRY
+BEGIN CATCH
+      PRINT 'Catch.'        
+      RAISERROR (N'Error in CATCH.', 16, 1)
+      PRINT 'Catch.'
+END CATCH
+
+PRINT 'End.'",
+			
+@"
+PRINT 'Start.'
+
+BEGIN TRY
+      PRINT 'Try.'     
+      RAISERROR (N'Error in TRY.', 18, 1)
+      PRINT 'Try.'     
+END TRY
+BEGIN CATCH
+      PRINT 'Catch.'        
+      RAISERROR (N'Error in CATCH.', 18, 1)
+      PRINT 'Catch.'
+END CATCH
+
+PRINT 'End.'",
+			
+@"
+PRINT 'Start.'
+
+BEGIN TRY
+      PRINT 'Try.'     
+      RAISERROR (N'Error in TRY.', 20, 1) WITH LOG
+      PRINT 'Try.'     
+END TRY
+BEGIN CATCH
+      PRINT 'Catch.'        
+      RAISERROR (N'Error in TRY.', 20, 1) WITH LOG
+      PRINT 'Catch.'
+END CATCH
+
+PRINT 'End.'"
+
+};
+
+		// Create a connection and command and set up info message event handler
+		SqlConnection conn = new SqlConnection(SQL_CONN_STR);
+		conn.InfoMessage += delegate(object sender, SqlInfoMessageEventArgs e)
+		{
+			WL("Info message fired: {0}", e.Message);
+		};
+		conn.FireInfoMessageEventOnUserErrors = true;
+		conn.Open();
+		SqlCommand cmd = new SqlCommand();
+		cmd.Connection = conn;
+		
+		for(int i = 0; i < cmds.Length; i++)
+		{
+			// re-open our connection if it has been closed (sev 20)
+			if(cmd.Connection.State == System.Data.ConnectionState.Closed) cmd.Connection.Open();
+			
+			string cmdText = cmds[i];
+			
+			WL("-------------------------------------");
+			WL("Executing Query {0}:\n\n {1}\n\n", i+1, cmdText);
+			WL("Messages:\n");
+			cmd.CommandText = cmdText;
+			try
+			{	
+				cmd.ExecuteNonQuery();
+				WL("\n\nResult:\nSuccess.");
+			}
+			catch(SqlException se)
+			{
+				WL("\n\nResult:\nSqlException.\nError severity: {0}\nMessage: {1}", se.Class, se.Message);
+			}
+			catch(Exception e)
+			{
+				WL("\n\nResult:\nException.\nSome other error...\n{0}", e);
+			}			
+		}
+		conn.Close();
+		RL();
+	}
+	
+	#region Helper methods
+
+	private static void WL(object text, params object[] args)
+	{
+		Console.WriteLine(text.ToString(), args);	
+	}
+	
+	private static void RL()
+	{
+		Console.ReadLine();	
+	}
+	
+	private static void Break() 
+	{
+		System.Diagnostics.Debugger.Break();
+	}
+
+	#endregion
+}

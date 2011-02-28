@@ -1,0 +1,68 @@
+<html>
+	<head>
+		<script type="text/javascript" src="json2.js"></script>
+		<script type="text/javascript" src="jquery-1.2.3.js"></script>
+		<script type="text/javascript" src="jquery.databind.js"></script>
+		<script type="text/javascript">
+			var data = [
+				{ name: 'Braeburn', origin: 'New Zealand', developed: '1950s, United States', comments: '', use: 'Eating' },
+				{ name: 'Bramley', origin: 'Southwell, Nottinghamshire, England', developed: 'about 1809', comments: '', use: 'Cooking' },
+				{ name: 'Cox\'s Orange Pippin', origin: 'Great Britain, New Zealand', developed: 'c. 1829', comments: '', use: 'Eating' },
+				{ name: 'Empire', origin: 'New York', developed: '1966', comments: 'Lovely white subacid flesh. Tangy taste.', use: 'Eating' },
+				{ name: 'Granny Smith', origin: 'Australia', developed: '1868, Australia', comments: 'This is the apple once used to represent Apple Records. Also noted as common pie apple.', use: 'Eating or cooking' }
+			];
+			
+			$(document).ready(function(){
+				// do our initial bind
+				$('#info').databind(data);
+				
+				// attach a click handler to our add button to add a row
+				$('#add').click(function(){
+					data.push({ name: '', origin: '', developed: '', comments: '', use: '' });
+					$('#info').databind(data);	
+				});
+				
+				// attach a handler to the Gimme button to show the current data
+				$('#gimme').click(function(){
+					alert(JSON.stringify(data, null, 2));
+				});
+			});
+		</script>
+		<style type="text/css">
+			#info td {
+				border: 1px solid #ccc;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Apples</h1>
+		<table id="info">
+			<thead>
+				<tr>
+					<th>Common name</th>	
+					<th>Origin</th>
+					<th>First developed</th>
+					<th>Use</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="field[name]"></td>
+					<td><input type="text" class="field[origin]"/></td>
+					<td class="field[developed]"></td>
+					<td class="field[use]"></td>
+					<td><button class="field[delete]">Delete Row</button></td>
+				</tr>
+				<tr>
+					<td colspan="4" style="border-bottom: 2px solid #888;"><textarea class="field[comments]" style="width: 100%;"></textarea></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="4"><button id="add">Add Item</button></td>
+				</tr>
+			</tfoot>
+		</table>
+		<button id="gimme">Gimme JSON!</button>
+	</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Lazy?</title>
+    <script type="text/javascript">
+      var t = true;
+      var f = false;
+	  if(t || Test('if statement 1')){}
+	  if(f && Test('if statement 2')){}
+	  var s = t ? 'blah' : Test('ternary op');
+	  var s = t ? 'blah' : x.apply(y);
+	  var s = t || Test('double question mark');
+	  
+      function Test(sMessage){
+        alert('This should not have been called - ' + sMessage);
+	  }	
+	</script>
+  </head>
+  <body>
+    
+  </body>
+</html>

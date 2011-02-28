@@ -1,0 +1,59 @@
+<html>
+	<head>
+		<title>Method Overload</title>
+		<script type="text/javascript">
+		
+		function Impl(){
+			var _impl = {};
+			return {
+				add: function(aSignature, fImpl){
+					_impl[aSignature] = fImpl;
+				},
+				exec: function(args, scope){
+					var aArgs = Array.prototype.slice.call(args);
+					var aCtors = [];
+					for(var i in aArgs) aCtors.push(aArgs[i].constructor);
+					return (_impl[aCtors] || function(){}).apply(scope, aArgs);
+				},
+				compile: function(){
+					var impl = this;
+					return function(){
+						return impl.exec(arguments, this);
+					};
+				}
+			};
+		}
+		
+		function stringify(){
+			var someVar = 'Items: ';
+			var impl = new Impl();
+			
+			impl.add([String, String], function(sLeft, sRight){
+				return sLeft + ': ' + sRight;
+			});
+			impl.add([Number, Number], function(iLeft, iRight){
+				return 'Sum: ' + (iLeft + iRight).toString();
+			});
+			impl.add([Array], function(aIn){
+				return someVar + aIn.join(', ');
+			});
+			
+			stringify = impl.compile();
+			return stringify.apply(this, arguments);
+		}		
+				
+		document.write('Calling with two strings<br/>');
+		document.write(stringify('foo', 'bar') + '<br/>');
+		
+		document.write('Calling with two numbers<br/>');
+		document.write(stringify(26, 5) + '<br/>');
+
+		document.write('Calling with an array<br/>');
+		document.write(stringify( [ 1, 2, 3 ] ) + '<br/>');		
+		
+		</script>
+	</head>
+	<body>
+		
+	</body>
+</html>

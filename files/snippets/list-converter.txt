@@ -1,0 +1,98 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+
+public class MyClass
+{
+	public static void Main()
+	{
+	
+		
+		InheritingType it1 = new InheritingType();
+		it1.Name = "Inherit 1";
+		it1.Age = 15;
+		
+		InheritingType it2 = new InheritingType();
+		it2.Name = "Inherit 2";
+		it2.Age = 12;
+		
+		InheritingType[] myArray = new InheritingType[]{ it1, it2 };
+		
+		List<InheritingType> myList = new List<InheritingType>();
+		myList.Add(it1);
+		myList.Add(it2);
+				
+		ArrayTest(myArray);
+		
+		//ListTest(myList);
+		
+		//ListTest((List<BaseType>)myList);
+		
+		//ListTest(ListConverter<InheritingType, BaseType>.Convert(myList));
+		
+		RL();
+	}
+	
+	public static void ArrayTest(BaseType[] bar)
+	{
+		foreach(BaseType bt in bar)
+		{
+			WL(bt.Name);
+		}
+	}
+	
+	public static void ListTest(List<BaseType> bar)
+	{
+		foreach(BaseType bt in bar)
+		{
+			WL(bt.Name);
+		}
+	}
+		
+	#region Helper methods
+
+	private static void WL(object text, params object[] args)
+	{
+		Console.WriteLine(text.ToString(), args);	
+	}
+	
+	private static void RL()
+	{
+		Console.ReadLine();	
+	}
+	
+	private static void Break() 
+	{
+		System.Diagnostics.Debugger.Break();
+	}
+
+	#endregion
+}
+
+public class ListConverter<TFrom, TTo> where TFrom : TTo
+{
+	public static IEnumerable<TTo> Convert(IEnumerable<TFrom> from)
+	{
+		return Convert(new List<TFrom>(from));
+	}
+	
+	public static List<TTo> Convert(List<TFrom> from)
+	{
+		return from.ConvertAll<TTo>(new Converter<TFrom, TTo>(Convert));
+	}
+
+	public static TTo Convert(TFrom from)
+	{
+		return (TTo)from;
+	}
+}
+
+public class BaseType
+{
+	public string Name;
+}
+
+public class InheritingType : BaseType
+{
+	public int Age;
+}

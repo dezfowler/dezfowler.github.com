@@ -1,0 +1,160 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+
+public class MyClass
+{
+	public static void Main()
+	{
+		// An arbitrary list of items
+		List<Mammal> lst = new List<Mammal>();
+		lst.Add(new Cat(12, CatColor.Black));
+		lst.Add(new Cat(2, CatColor.BlackAndOrangeStripes));
+		lst.Add(new Dog(4, DogColor.Grey));
+		lst.Add(new DomesticCat(6, CatColor.TortoiseShell, "Felix"));
+		
+		// Our visitor on our base class which will do our type specific work
+		Visitor<Mammal> visitor = new Visitor<Mammal>();
+		string outerVar = "A variable from outside delegate";
+		
+		// Add the work to be done for DomesticCat
+		visitor.AddDelegate<DomesticCat>(delegate(DomesticCat a){
+			WL("Doing some DomesticCat specific work");
+			WL(a.Age + ", " + a.Color + ", " + a.Name);
+			WL(outerVar);
+		});
+		
+		// Add the work to be done for Dog
+		visitor.AddDelegate<Dog>(delegate(Dog b){
+			WL("Doing some Dog specific work");
+			WL(b.Age + ", " + b.Color);
+		});
+		
+		// Loop through the list and execute the visitor
+		foreach(Mammal a in lst)
+		{
+			a.Accept(visitor);
+			WL("-------END---");
+		}
+				
+		RL();
+	}
+	
+	#region Helper methods
+
+	private static void WL(object text, params object[] args)
+	{
+		Console.WriteLine(text.ToString(), args);	
+	}
+	
+	private static void RL()
+	{
+		Console.ReadLine();	
+	}
+	
+	private static void Break() 
+	{
+		System.Diagnostics.Debugger.Break();
+	}
+
+	#endregion
+}
+
+public abstract class Mammal
+{
+	public int Age;
+	public Mammal(int age)
+	{
+		this.Age = age;
+	}
+	public abstract void Accept(Visitor<Mammal> visitor);
+}
+
+public enum CatColor
+{
+	Black,
+	White,
+	TortoiseShell,
+	Yellow,
+	BlackAndOrangeStripes,
+	YellowWithBlackSpots,
+	YellowWithBlackRings
+}
+
+public class Cat : Mammal
+{
+	public CatColor Color;
+	public Cat(int age, CatColor color) : base(age) 
+	{
+		Color = color;
+	}
+	public override void Accept(Visitor<Mammal> visitor)
+	{
+		visitor.Visit<Cat>(this);
+	}
+}
+
+public class DomesticCat : Cat
+{
+	public string Name;
+	public DomesticCat(int age, CatColor color, string name) : base(age, color) 
+	{
+		Name = name;
+	}
+	public override void Accept(Visitor<Mammal> visitor)
+	{
+		visitor.Visit<DomesticCat>(this);
+	}
+}
+
+public enum DogColor
+{
+	Black,
+	White,
+	Grey,
+	Yellow,
+	Brown
+}
+
+public class Dog : Mammal
+{
+	public DogColor Color;
+	public Dog(int age, DogColor color) : base(age) 
+	{
+		Color = color;
+	}
+	public override void Accept(Visitor<Mammal> visitor)
+	{
+		visitor.Visit<Dog>(this);
+	}
+}
+
+// Visitor for base type TBase
+public class Visitor<TBase>
+{
+
+	// Delegate for type TSub which can be any subclass of TBase
+	// that takes a parameter of type TSub
+	public delegate void VisitDelegate<TSub>(TSub u) where TSub : TBase;
+	
+	// Dictionary to contain our delegates
+	Dictionary<Type, object> vDels = new Dictionary<Type, object>();
+	
+	// Method to add a delegate for type TSub which can be any subclass of TBase
+	public void AddDelegate<TSub>(VisitDelegate<TSub> del) where TSub : TBase
+	{
+		vDels.Add(typeof(TSub), del);
+	}
+	
+	// Visit method for type TSub which can be any subclass of TBase
+	// takes one parameter of type TSub, picks the right delegate
+	// and executes it passing the parameter to it
+	public void Visit<TSub>(TSub x) where TSub : TBase
+	{
+		if(vDels.ContainsKey(typeof(TSub)))
+		{
+			((VisitDelegate<TSub>)vDels[typeof(TSub)])(x);
+		}
+	}
+	
+}
